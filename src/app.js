@@ -47,21 +47,24 @@ app.delete("/repositories/:id", (request, response) => {
     const firsRepo = 0
     let lastRepo = repositories.length
     let repoSeletedIndex = repositories.findIndex(repoSelect => repoSelect.id === id)
-
-    if (repoSeletedIndex === firsRepo) return response.json(repositories.shift())
-    if (repoSeletedIndex === lastRepo) return response.json(repositories.pop())
-    if (repoSeletedIndex > firsRepo && repoSeletedIndex < lastRepo) {
-      const repoDelete = repositories[repoSeletedIndex]
-      const BeforeSelected = repositories.slice(firsRepo, repoSeletedIndex)
-      const AfterSelected = repositories.slice(repoSeletedIndex + 1, lastRepo)
-      let refreshRepositorie = [...BeforeSelected, ...AfterSelected]
-      repositories = refreshRepositorie
-      console.log(lastRepo + " " + repoSeletedIndex)
-      return response.json(repoDelete)
+    if (repoSeletedIndex > -1) {
+      if (repoSeletedIndex === firsRepo) return response.json(repositories.shift())
+      if (repoSeletedIndex === lastRepo) return response.json(repositories.pop())
+      if (repoSeletedIndex > firsRepo && repoSeletedIndex < lastRepo) {
+        const repoDelete = repositories[repoSeletedIndex]
+        const BeforeSelected = repositories.slice(firsRepo, repoSeletedIndex)
+        const AfterSelected = repositories.slice(repoSeletedIndex + 1, lastRepo)
+        let refreshRepositorie = [...BeforeSelected, ...AfterSelected]
+        repositories = refreshRepositorie
+        //return response.json(repoDelete)
+        return response.status(204).send()
+      }
+    } else {
+      return response.status(400).json({ error: 'Repo not Found' })
 
     }
-  } catch (err) {
-    return response.status(400).json({ error: `${err}` })
+  } catch (error) {
+    return response.status(400).json({ error })
   }
 
 });
