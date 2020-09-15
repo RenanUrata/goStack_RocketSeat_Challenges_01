@@ -20,6 +20,7 @@ app.post("/repositories", (request, response) => {
   const likes = 0
   const { title, url, techs } = request.body
   const repoNew = { id: uuid(), title, url, techs, likes }
+  repositories.map(r=>console.log(r.techs))
   repositories.push(repoNew)
   return response.json(repoNew)
 });
